@@ -1,0 +1,63 @@
+---
+const {active} = Astro.props;
+const actionsList = [
+  {name: 'Events', path: 'events'},
+  {name: 'Blogs', path: 'blogs'},
+  {name: 'FAQs', path: 'faq'},
+]
+
+// let hover = " hover:underline hover:decoration-4 transition-all hover:decoration-indigo-500 dark:decoration-indigo-300 hover:underline-offset-2 ";
+let hover = "  ";
+function activeHighlight(action) {
+  // return (active == action.path) ? "underline decoration-2 decoration-indigo-500 dark:decoration-indigo-300 underline-offset-2 text-slate-700 font-medium " : "";
+  return (active == action.path) ? " text-indigo-500 " : "text-slate-900 ";
+}
+---
+
+<nav class="fixed flex px-20 py-6 tbl:px-6 tbl:py-6 z-[10000] w-full backdrop-blur flex-none bg-slate-50/80 supports-backdrop-blur:bg-white/50 border-b-[1px] dark:border-b-slate-400/20 border-b-slate-900/10 gap-x-4 tbl:gap-x-0">
+    <div class="flex mx-auto w-full flex-1 items-center text-center text-slate-900">
+        <a href={import.meta.env.BASE_URL} class="flex items-center"> 
+            <img 
+                src={import.meta.env.BASE_URL + "assets/logo.svg" }
+                alt="logo" 
+                class="w-36 mr-2 tbl:m-0"> 
+        </a>
+    </div>
+    <div class="font-roboto-flex ml-2 tbl:ml-4 lpt:ml-6 text-slate-900 font-['Manrope'] flex gap-x-6 tbl:gap-4 lpt:gap-6 items-center">
+      {actionsList.map( (action) => (
+        <a 
+          class={activeHighlight(action) + "font-roboto-flex text-sm tbl:text-base font-medium"} 
+          href={import.meta.env.BASE_URL + action.path}>
+          {action.name}
+        </a>
+      ))}
+    </div>
+</nav>
+
+<!-- <script is:inline>
+  // localStorage.theme = 'light'
+  const checkTheme = () => {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+      document.getElementById('dark').checked = true
+      document.getElementById('light').checked = false
+    } else {
+      document.documentElement.classList.remove('dark')
+      document.getElementById('light').checked = true
+      document.getElementById('dark').checked = false
+    }
+  }
+
+  checkTheme()
+
+  document.getElementById('dark').addEventListener("click", () => {
+    localStorage.theme = 'dark'
+    checkTheme()
+  })
+
+  document.getElementById('light').addEventListener("click", () => {
+    localStorage.theme = 'light'
+    checkTheme()
+  })
+
+</script> -->
