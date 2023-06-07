@@ -1,34 +1,9 @@
 ---
-import ToolTip from "../common/ToolTip.svelte";
+import EventCard from "../common/EventCard.astro";
 const {event, isFirst=false} = Astro.props;
 ---
-
-
-<a href={event.url} class={"peer flex lpt:flex-row flex-col gap-x-10 mt-4 rounded-2xl px-6 py-4 hover:bg-blue-100 transition-all border-2  hover:border-blue-400 " + (isFirst ? "border-2 border-blue-400" : "border-transparent")}>
-    <div class="flex lpt:flex-col flex-row-reverse gap-x-2 items-center font-['Atkinson_hyperlegible'] lpt:mb-0 mb-4">
-        <div class="font-semibold text-lg text-blue-700">
-            {event.time}
-        </div>
-        <div class="lpt:text-4xl text-2xl flex lpt:flex-col flex-row gap-2">
-            <div class="font-['Atkinson_Hyperlegible'] ">
-                {event.date + "." + event.month.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}
-            </div>
-            <div class="font-['Atkinson_Hyperlegible']">{event.year}</div>
-        </div>
-    </div>
-    <div class="flex flex-col gap-y-2">
-        <h2 class="text-2xl font-bold font-['Manrope'] mb-2">{event.title}</h2>
-        <div>{event.description}</div>
-        <div class="flex my-2 gap-x-2">
-            {event.speakers.map((speaker) => (
-                <img class="rounded-full border-2 border-blue-700 w-8 h-8" src={speaker.imageUrl} alt={speaker.name}/>
-            ))}
-        </div>
-        <div class="flex gap-x-2 items-center mt-2">
-            <span class="material-symbols-rounded"> location_on </span>
-            {event.venue}
-        </div>
-    </div>
-</a>
-<div class="w-16 h-[1.5px] absolute transition-all lpt:peer-hover:block hidden bg-blue-200 top-1/2 -left-8 -translate-x-1/2 -translate-y-1/2"></div>
-<div class={(isFirst ? "bg-blue-700 ": "bg-blue-300 ") + "lpt:block hidden transition-all peer-hover:bg-blue-700 rounded-full w-6 h-6 absolute top-1/2 -left-16 -translate-y-1/2"}></div>
+<div class="peer">
+    <EventCard event={event}, isFirst={isFirst}>
+</div>
+<div class="w-16 h-[1.5px] absolute transition-all lpt:peer-hover:block hidden bg-light-primary-container top-1/2 -left-8 -translate-x-1/2 -translate-y-1/2"></div>
+<div class={(isFirst ? "bg-primary-40 ": "bg-light-primary-container ") + "lpt:block hidden transition-all peer-hover:bg-primary-40 rounded-full w-6 h-6 absolute top-1/2 -left-16 -translate-y-1/2"}></div>

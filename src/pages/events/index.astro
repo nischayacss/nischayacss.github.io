@@ -1,0 +1,45 @@
+---
+import EventCard from '../../components/common/EventCard.astro';
+import EventSelect from '../../components/events/EventSelect.astro';
+import EventLayout from '../../layouts/EventListLayout.astro';
+
+interface IEvent {
+  title: string;
+  description: string;
+  venue: string;
+  date: number;
+  month: number;
+  year: number;
+  time: string;
+  url: string;
+}
+
+const today = new Date();
+
+let upcoming:IEvent[] = (await Astro.glob('../event/**/*.{md,mdx}'))
+              .filter(event => !event.frontmatter.draft)
+              .filter(event => {
+                let eDate = new Date(event.frontmatter.date);
+                return (eDate >= today)}
+              )
+              .sort((a,b) => {
+                let c = new Date(a.frontmatter.date);
+                let d = new Date(b.frontmatter.date);
+                return c<d ? -1 : 1;
+              })
+              .map(event => {
+                let url = event.url;
+                let frontmatter = event.frontmatter;
+                let formatDate = new Date(frontmatter.date);
+                return { ...frontmatter, time: formatDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), date: formatDate.getDate(), month: formatDate.toLocaleString('default', { month: 'short' }), year: formatDate.getFullYear(), url}
+              })
+---
+
+<EventLayout title="Events under Nischaya" active="events" state="Upcoming">
+		<!-- <EventCard> -->
+      {upcoming.map((event) => (
+        <div class="relative">
+          <EventCard event={event}/>
+        </div>
+      ))}
+</EventLayout>

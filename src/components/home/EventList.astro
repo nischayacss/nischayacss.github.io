@@ -1,4 +1,5 @@
 ---
+import { defaultLogLevel } from "astro/dist/core/logger/core";
 import EventCard from "./EventCard.astro";
 interface IEvent {
   title: string;
@@ -10,37 +11,78 @@ interface IEvent {
   time: string;
   url: string;
 }
-let events:IEvent[] = (await Astro.glob('../../pages/event/**/*.{md,mdx}'))
-              .filter(event => !event.frontmatter.draft)
+let eventsThere = (await Astro.glob('../../pages/event/**/*.{md,mdx}'))
+                  .filter(event => !event.frontmatter.draft)
+
+let today = new Date();
+
+let upcoming:IEvent[] = eventsThere.filter(event => {
+                let eDate = new Date(event.frontmatter.date);
+                return (eDate > today)}
+              )
               .sort((a,b) => {
                 let c = new Date(a.frontmatter.date);
                 let d = new Date(b.frontmatter.date);
-                return c<d ? 1 : -1;
+                return c<d ? -1 : 1;
               })
               .map(event => {
                 let url = event.url;
                 let frontmatter = event.frontmatter;
                 let formatDate = new Date(frontmatter.date);
-                return { ...frontmatter, time: formatDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), date: formatDate.getDate(), month: formatDate.getMonth() + 1, year: formatDate.getFullYear(), url}
-              }).slice(0,3)
+                return { ...frontmatter, time: formatDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), date: formatDate.getDate(), month: formatDate.toLocaleString([], {month: 'short'}), year: formatDate.getFullYear(), url}
+              })
+
+let past:IEvent[] =  eventsThere.filter(event => {
+                let eDate = new Date(event.frontmatter.date);
+                return (eDate <= today)
+              })
+              .sort((a,b) => {
+                let c = new Date(a.frontmatter.date);
+                let d = new Date(b.frontmatter.date);
+                return c<d ? -1 : 1;
+              })
+              .map(event => {
+                let url = event.url;
+                let frontmatter = event.frontmatter;
+                let formatDate = new Date(frontmatter.date);
+                return { ...frontmatter, time: formatDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), date: formatDate.getDate(), month: formatDate.toLocaleString([], {month: 'short'}), year: formatDate.getFullYear(), url}
+              })
+
+console.log(upcoming, past)
+switch (upcoming.length){
+  case 1:
+    past = past.slice(0,2);
+    break;
+  case 2:
+    past = past.slice(0,1);
+    break;
+  default:
+    upcoming = upcoming.slice(0,3);
+    past = past.slice(0,0);
+}
 ---
 
 <main class="relative flex w-full lpt:h-[40rem] h-[50rem] overflow-y-hidden overflow-x-clip">
   <div class="absolute bottom-0 w-full h-24 bg-gradient-to-t from-white z-[100]"></div>
-  <div class="lpt:block hidden ml-3 absolute w-[1.6px] h-full bg-blue-200" />
+  <div class="lpt:block hidden ml-3 absolute w-[1.6px] h-full bg-light-primary-container" />
   <div class="lpt:ml-16">
-    {events.length > 0 ?
-      (
-          events.map((event, i) => (
-            <div class="relative">
-              <EventCard event={event} isFirst={(i==0)}/>
-            </div>
-          ))
-      ) :
-      (<div>empty</div>)
+    {
+      upcoming.map((event, i) => (
+        <div class="relative">
+          <EventCard event={event} isFirst={(i==0)}/>
+        </div>
+      ))
+    }
+    <hr class="mt-4 bg-light-outline" />
+    {
+      past.map((event) => (
+        <div class="relative">
+          <EventCard event={event}/>
+        </div>
+      ))
     }
   </div>
-  <a href="/events" class="flex items-center gap-x-2 absolute bottom-0 -translate-y-1/2 -translate-x-1/2 left-1/2 z-[1000] bg-white px-6 py-3 rounded-full border-2 border-blue-800 hover:bg-blue-800 hover:text-white transition-all font-medium w-max">
+  <a href="/events" class="flex items-center gap-x-2 absolute bottom-0 -translate-y-1/2 -translate-x-1/2 left-1/2 z-[1000] bg-white px-6 py-3 rounded-full border-2 border-primary-40 hover:bg-primary-40 hover:text-white transition-all font-medium w-max">
     <span class="material-symbols-rounded"> calendar_month </span>
     Show more events
   </a>

@@ -1,0 +1,23 @@
+---
+import EventSelect from '../components/events/EventSelect.astro'
+import Layout from './Layout.astro'
+export interface Props {
+	title: string;
+	active?: string;
+	state?: string;
+}
+
+const { title, active="/", state="Upcoming" } = Astro.props;
+---
+
+<Layout title={title} active={active} >
+	<main class="grid lpt-lg:grid-cols-11 align-start tbl:grid-cols-10 mbl-lg:grid-6 pt-40 lpt-lg:px-20 lpt:px-10 tbl:px-6 px-2 gap-x-9">
+		<div class="lpt-lg:col-span-2 lpt:col-span-3 tbl:col-span-4 col-span-3">
+			<h3 class="my-4 mx-6 text-2xl font-semibold">Event time</h3>
+			<EventSelect active={state}>
+		</div>
+		<div class="lpt-lg:col-span-9 lpt:col-span-7 tbl:col-span-10 col-span-6">
+			<slot  />
+		</div>
+	</div>
+</Layout>
