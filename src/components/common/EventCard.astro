@@ -2,7 +2,7 @@
 import ToolTip from "../common/ToolTip.svelte";
 const {event, isFirst=false} = Astro.props;
 ---
-<a href={event.url} class={`peer flex lpt:flex-row flex-col 
+<a href={event.registrationLink} target="_blank" rel="noreferrer" class={`peer flex lpt:flex-row flex-col 
             lpt:gap-x-10 mt-4 rounded-2xl px-6 py-4 hover:text-light-on-primary-container
             hover:bg-light-primary-container/40 
             transition-all border-[1px]  hover:border-primary-60 

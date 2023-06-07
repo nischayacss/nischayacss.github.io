@@ -10,6 +10,7 @@ interface IEvent {
   year: number;
   time: string;
   url: string;
+  registrationLink: string;
 }
 let eventsThere = (await Astro.glob('../../pages/event/**/*.{md,mdx}'))
                   .filter(event => !event.frontmatter.draft)
@@ -29,6 +30,7 @@ let upcoming:IEvent[] = eventsThere.filter(event => {
                 let url = event.url;
                 let frontmatter = event.frontmatter;
                 let formatDate = new Date(frontmatter.date);
+                console.log(frontmatter)
                 return { ...frontmatter, time: formatDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), date: formatDate.getDate(), month: formatDate.toLocaleString([], {month: 'short'}), year: formatDate.getFullYear(), url}
               })
 
